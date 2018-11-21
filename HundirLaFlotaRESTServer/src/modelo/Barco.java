@@ -4,7 +4,7 @@ public class Barco {
 	/**
 	 * Clase para guardar la informacion de un barco en una partida de 'Hundir la flota'
 	 */
-
+    
 	private int filaInicial,	// coordenadas iniciales del barco
 	            columnaInicial; 
 	private char orientacion;	// 'H': horizontal; 'V':vertical
