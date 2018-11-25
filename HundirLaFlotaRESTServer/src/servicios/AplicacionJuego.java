@@ -1,7 +1,6 @@
 package servicios;
 
-import javax.ws.rs.ApplicationPath;
-import javax.ws.rs.core.Application;
+
 import java.util.HashSet;
 import java.util.Set;
 
@@ -21,7 +20,6 @@ public class AplicacionJuego extends Application {
       singletons.add(new RecursoPartida());
    }
 
-   @Override
    public Set<Object> getSingletons() {
       return singletons;
    }
