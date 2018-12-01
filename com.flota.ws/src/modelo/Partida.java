@@ -40,7 +40,7 @@ package modelo;
 			this.disparos = 0;
 			iniciaMatriz(nf, nc); // Inicia toda la matriz a agua
 			barcos = new Vector<Barco>();
-			ponBarcos();		
+			ponBarcos();
 		}
 		
 		/**
