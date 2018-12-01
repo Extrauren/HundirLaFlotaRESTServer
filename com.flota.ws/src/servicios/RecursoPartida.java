@@ -66,12 +66,10 @@ public class RecursoPartida {
 		// Asigna a la partida un identificador unico incrementando el atributo idCounter
 		int id = idCounter.incrementAndGet();
 		partidaDB.put(id, partida);
-
 		// Construye la respuesta incluyendo la URI absoluta al nuevo recurso partida
 		// Obtiene la ruta absoluta de la información de contexto inyectada mediante @Context al método
 		UriBuilder uriBuilder = uriInfo.getBaseUriBuilder();
 		URI newURI = uriBuilder.path("partidas/" + id).build();
-
 		// El método created añade el URI proporcionado a la cabecera 'Location'
 		ResponseBuilder response = Response.created(newURI);
 		// Devuelve el estado 201 indicando que la partida se ha CREATED con éxito
@@ -84,9 +82,16 @@ public class RecursoPartida {
 	 * @return				cuerpo vacío y estado indicando si se ha podido borrar la partida
 	 */		
 	/* FALTAN ANOTACIONES JAX-RS*/
+	@DELETE
+	@Path("{idPartida}")
 	public Response borraPartida(@PathParam("idPartida") int idPartida) {
 		/* POR IMPLEMENTAR */
-        return null; // A MODIFICAR
+		if(partidaDB.remove(idPartida) != null) {
+			return Response.ok().build();
+		}else {
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+        
 	}
 
 	/**
@@ -97,12 +102,19 @@ public class RecursoPartida {
 	 * @return				cuerpo conteniendo el resultado de probar la casilla
 	 */
 	/* FALTAN ANOTACIONES JAX-RS*/
-	public Response pruebaCasilla( @PathParam("idPartida") int idPartida,
-			@QueryParam("fila") int fila,
-			@QueryParam("columna") int columna)   {
+	
+	@GET													//get porque es pedir info
+	@Path("{idPartida}/casilla")			//el path tal y como te indica el enunciado
+	@Produces("text/plain")									//lo que tiene que producir 
+	public Response pruebaCasilla( @PathParam("idPartida") int idPartida,@QueryParam("fila") int fila,@QueryParam("columna") int columna){
 		/* POR IMPLEMENTAR */
-        return null; // A MODIFICAR
-	}
+		Partida local = partidaDB.get(idPartida);			//sacas la partida de la base de datos
+		if(local != null) {									//si no es nula devulves el response adecuado
+			return Response.ok(local.pruebaCasilla(fila, columna)).build();
+		}else {												//si lo es devulves el status not found
+			return Response.status(Response.Status.NOT_FOUND).build();
+		}
+	}														//analogo para todos los metodos de esta clase
 	
 
 	/**
@@ -112,10 +124,17 @@ public class RecursoPartida {
 	 * @return				cuerpo conteniendo la cadena con informacion sobre el barco "fila#columna#orientacion#tamanyo"
 	 */
 	/* FALTAN ANOTACIONES JAX-RS*/
-	public Response getBarco( @PathParam("idPartida") int idPartida,
-			@PathParam("idBarco") int idBarco)   {
-		/* POR IMPLEMENTAR */
-        return null; // A MODIFICAR
+	
+	@GET
+	@Path("{idPartida}/barco/{idBarco}")
+	public Response getBarco( @PathParam("idPartida") int idPartida, @PathParam("idBarco") int idBarco)   {
+		
+		Partida local = partidaDB.get(idPartida);
+		if(local != null) {
+			return Response.ok(local.getBarco(idBarco)).build();
+		}
+		return Response.status(Response.Status.NOT_FOUND).build();
+		
 	}
 
 
@@ -125,9 +144,18 @@ public class RecursoPartida {
 	 * @return 		cuerpo conteniendo la codificación XML de la solución
 	 */
 	/* FALTAN ANOTACIONES JAX-RS*/
+	
+	@GET
+	@Path("{idPartida}/solucion")
+	@Produces("text/plain")
 	public Response getSolucion(@PathParam("idPartida") int idPartida) {
-		/* POR IMPLEMENTAR */
-        return null; // A MODIFICAR
+		
+        Partida local = partidaDB.get(idPartida);
+        if(local != null) {
+        	return Response.ok(local.getSolucion()).build();
+        }else {
+        	return Response.status(Response.Status.NOT_FOUND).build();
+        }
 	}
 
 	/**
